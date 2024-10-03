@@ -1,5 +1,5 @@
-resource "aws_iam_role" "lambdaRole" {
-  name = "lambdaRole"
+resource "aws_iam_role" "lambdaRoleTextract" {
+  name = "lambdaRoleTextract"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17"
     "Statement" : [
@@ -10,7 +10,7 @@ resource "aws_iam_role" "lambdaRole" {
         ]
         "Principal" : {
           "Service" : [
-            "lambda.amazon.com"
+            "lambda.amazonaws.com"
           ]
         }
       }
@@ -18,8 +18,8 @@ resource "aws_iam_role" "lambdaRole" {
   })
 }
 
-resource "aws_iam_policy" "lambdaS3Policy" {
-  name = "lambdaS3Policy"
+resource "aws_iam_policy" "lambdaS3PolicyTextract" {
+  name = "lambdaS3PolicyTextract"
   policy = jsonencode({
     "Version" : "2012-10-17"
     "Statement" : [
@@ -33,44 +33,51 @@ resource "aws_iam_policy" "lambdaS3Policy" {
         "Resource" : "arn:aws:logs:*:*:*"
       },
       {
-        Effect: "Allow",
-        Action: [
-            "s3:GetObject",
-            "s3:PutObject"
+        Effect : "Allow",
+        Action : [
+          "s3:*",
         ],
-        Resource: "arn:aws:s3:::my-bucket-serverless-src-and-dest/*"
+        Resource : "arn:aws:s3:::my-bucket-serverless-source/*",
+        Resource : "arn:aws:s3:::my-bucket-serverless-dest-bucket/*"
       },
       {
-            "Effect": "Allow",
-            "Action": [
-                "textract:*"
-            ],
-            "Resource": "*"
-        }
+        "Effect" : "Allow",
+        "Action" : [
+          "textract:*"
+        ],
+        "Resource" : "*"
+      }
     ]
   })
 }
 
 resource "aws_iam_policy_attachment" "lambdaRolePolicyAttachment" {
-  policy_arn = aws_iam_policy.lambdaS3Policy.arn
-  roles = [aws_iam_role.lambdaRole]
-  name = "lambdaRolePolicyAttachment"
+  policy_arn = aws_iam_policy.lambdaS3PolicyTextract.arn
+  roles      = [aws_iam_role.lambdaRoleTextract.name]
+  name       = "lambdaRolePolicyAttachment"
 }
 
 data "archive_file" "lambda_file" {
-  type = "zip"
+  type        = "zip"
   source_file = "${path.module}/pdfProcessing.py"
   output_path = "${path.module}/pdfProcessing.zip"
 }
 
 resource "aws_lambda_function" "pdf-processor" {
-  role = aws_iam_role.lambdaRole.arn
-  filename = data.archive_file.lambda_file.output_path
+  role             = aws_iam_role.lambdaRoleTextract.arn
+  filename         = data.archive_file.lambda_file.output_path
   source_code_hash = data.archive_file.lambda_file.output_base64sha256
-  function_name = "pdfProcessing"
-  timeout = 60
-  runtime = "python3.9"
-  handler = "pdfProcessing.lambda.lambda_handler"
+  function_name    = "pdfProcessing"
+  timeout          = 60
+  runtime          = "python3.9"
+  handler          = "pdfProcessing.lambda_handler"
+
+  environment {
+    variables = {
+      TEXTRACT_NOTIFICATION_TOPIC = aws_sns_topic.myTopic.arn
+      TEXTRACT_ROLE_ARN           = aws_iam_role.snsRole.arn
+    }
+  }
 }
 
 
@@ -79,7 +86,7 @@ resource "aws_lambda_permission" "pdf-processor-permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pdf-processor.function_name
   principal     = "s3.amazonaws.com"
-  source_arn = aws_s3_bucket.my_bucket.arn
+  source_arn    = aws_s3_bucket.my_bucket.arn
 }
 
 resource "aws_s3_bucket_notification" "bucketNotification" {
@@ -91,5 +98,5 @@ resource "aws_s3_bucket_notification" "bucketNotification" {
     filter_prefix       = "source/"
   }
 
-  depends_on = [ aws_lambda_permission.pdf-processor-permission ]
+  depends_on = [aws_lambda_permission.pdf-processor-permission]
 }

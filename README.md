@@ -14,7 +14,7 @@ We are going to use two lambda functions, the first one will be triggered by fil
 1. Upload: Users upload documents, such as PDFs or scanned images, to an Amazon S3 bucket in the incoming folder.
 2. Lambda Trigger via S3 Notification: When a document is uploaded to the S3 bucket, it triggers an AWS Lambda function via an S3 notification.
 3. Textract Processing: The triggered Lambda function calls AWS Textract, which processes the document.
-4. Lambda Trigger via an event: Once Textract completes the document processing, a cloudwatch event triggers another Lambda function.
+4. Lambda Trigger via an SNS: Once Textract completes the document processing, it sends a message to AWS SNS, which triggers another Lambda function.
 5. Post-Processing: he second Lambda function can further process the extracted data by formatting it into a structured format (e.g., JSON, CSV) and storing it in an S3 bucket or a database like Amazon RDS or DynamoDB for easy retrieval and analysis.
 
 
