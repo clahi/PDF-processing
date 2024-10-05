@@ -20,7 +20,7 @@ resource "aws_lambda_function" "parseTextract" {
   }
 }
 
-# Permission for the lambda to be triggered by the event
+# Permission for the lambda to be triggered by the sns event
 resource "aws_lambda_permission" "with_sns" {
   statement_id  = "AllowExecutionFromSNS"
   action        = "lambda:InvokeFunction"
