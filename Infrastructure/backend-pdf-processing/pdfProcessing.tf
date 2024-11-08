@@ -1,5 +1,5 @@
-resource "aws_iam_role" "lambdaRoleTextract" {
-  name = "lambdaRoleTextract"
+resource "aws_iam_role" "lambda_pdf_processing" {
+  name = "lambda-pdf-processing"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17"
     "Statement" : [
@@ -18,8 +18,8 @@ resource "aws_iam_role" "lambdaRoleTextract" {
   })
 }
 
-resource "aws_iam_policy" "lambdaS3PolicyTextract" {
-  name = "lambdaS3PolicyTextract"
+resource "aws_iam_policy" "lambda_s3_pdf_processing_policy" {
+  name = "lambda-s3-pdf-processing-policy"
   policy = jsonencode({
     "Version" : "2012-10-17"
     "Statement" : [
@@ -52,8 +52,8 @@ resource "aws_iam_policy" "lambdaS3PolicyTextract" {
 }
 
 resource "aws_iam_policy_attachment" "lambdaRolePolicyAttachment" {
-  policy_arn = aws_iam_policy.lambdaS3PolicyTextract.arn
-  roles      = [aws_iam_role.lambdaRoleTextract.name]
+  policy_arn = aws_iam_policy.lambda_s3_pdf_processing_policy.arn
+  roles      = [aws_iam_role.lambda_pdf_processing.name]
   name       = "lambdaRolePolicyAttachment"
 }
 
@@ -64,7 +64,7 @@ data "archive_file" "lambda_file" {
 }
 
 resource "aws_lambda_function" "pdf-processor" {
-  role             = aws_iam_role.lambdaRoleTextract.arn
+  role             = aws_iam_role.lambda_pdf_processing.arn
   filename         = data.archive_file.lambda_file.output_path
   source_code_hash = data.archive_file.lambda_file.output_base64sha256
   function_name    = "pdfProcessing"
