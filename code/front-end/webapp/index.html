@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Viewer, Text Extractor & S3 Uploader</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1006.0.min.js"></script>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row no-gutters">
+    <!-- Left Column: PDF Upload and Viewer -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Upload & View PDF</h5>
+        </div>
+        <div class="card-body d-flex flex-column align-items-center">
+          <input type="file" id="pdf-upload" accept="application/pdf" />
+          <button class="btn btn-secondary mb-3" onclick="document.getElementById('pdf-upload').click();">Upload PDF</button>
+          <iframe id="pdf-frame" style="display: none;"></iframe>
+          <button id="s3-upload-button" class="btn btn-primary mt-3" onclick="uploadToS3()">Upload to S3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Text Display -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Extracted Text</h5>
+        </div>
+        <div class="card-body textarea-container">
+            <div class="spinner-container">
+                <div id="spinner" class="spinner"></div>
+            </div>
+          <textarea id="text-output" class="form-control" readonly></textarea>
+          <button id="download-button" class="btn btn-secondary mt-3" onclick="downloadExtractedText()">Download Extracted Text</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./script.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

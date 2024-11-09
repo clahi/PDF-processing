@@ -17,7 +17,7 @@ def lambda_handler(event, context):
         print('bucket Name', bucket)
         
         try:
-            time.sleep(2)
+            # time.sleep(2)
             # Start Textract asynchronous processing, use env vars
             response = textract.start_document_text_detection(
                 DocumentLocation={

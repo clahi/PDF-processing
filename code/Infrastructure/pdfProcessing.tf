@@ -37,7 +37,7 @@ resource "aws_iam_policy" "lambda_s3_pdf_processing_policy" {
         Action : [
           "s3:*",
         ],
-        Resource : "arn:aws:s3:::my-bucket-serverless-source/*",
+        Resource : "arn:aws:s3:::my-bucket-serverless-source-01/*",
         Resource : "arn:aws:s3:::my-bucket-serverless-dest-bucket/*"
       },
       {

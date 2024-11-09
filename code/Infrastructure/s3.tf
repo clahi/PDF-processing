@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "my-bucket-serverless-source"
+  bucket = "my-bucket-serverless-source-01"
 }
 
 resource "aws_s3_bucket_ownership_controls" "bucketOwnershipControl" {
@@ -41,7 +41,7 @@ resource "aws_s3_bucket_policy" "my_bucket_policy" {
           "s3:*"
         ],
         "Resource" : [
-          "arn:aws:s3:::my-bucket-serverless-source/*"
+          "arn:aws:s3:::my-bucket-serverless-source-01/*"
         ]
       }
     ]
