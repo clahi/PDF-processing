@@ -10,6 +10,10 @@ When combined with AWS lambda and S3, Textract can be triggered automatically wh
 # Asynchronous Implementation
 We are going to use two lambda functions, the first one will be triggered by file uploads to a source s3 bucket. The second lambda function will be triggered by a Textract event and parse out the results and save the results to a distination bucket.
 
+## Infrastructure
+The infrastructure of our project:
+![Infrastructure](images/pdf-processing.PNG)
+
 ## The steps
 1. Upload: Users upload documents, such as PDFs or scanned images, to an Amazon S3 bucket in the incoming folder.
 2. Lambda Trigger via S3 Notification: When a document is uploaded to the S3 bucket, it triggers an AWS Lambda function via an S3 notification.
