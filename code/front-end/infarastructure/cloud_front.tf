@@ -1,8 +1,3 @@
-# resource "aws_s3_bucket_acl" "b_acl" {
-#   bucket = aws_s3_bucket.b.id
-#   acl    = "private"
-# }
-
 # Manages an AWS CloudFront Origin Access Control, 
 # which is used by CloudFront Distributions with an Amazon S3 bucket as the origin.
 resource "aws_cloudfront_origin_access_control" "default" {
@@ -26,7 +21,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "Added a download button"
   default_root_object = "index.html"
 
   default_cache_behavior {

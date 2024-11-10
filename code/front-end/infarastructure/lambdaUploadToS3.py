@@ -48,7 +48,6 @@ def lambda_handler(event, context):
     except Exception as e:
         print('all the error ', e)
         print(e.response['Error']['Message'])
-    print('The full text latest', full_text)
     return {
         "statusCode": 200,
         "headers": {
