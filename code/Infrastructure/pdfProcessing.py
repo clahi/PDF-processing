@@ -13,11 +13,10 @@ def lambda_handler(event, context):
     for record in event['Records']:
         bucket = record['s3']['bucket']['name']
         key = record['s3']['object']['key']
-        print('The key', key)
-        print('bucket Name', bucket)
+        # print('The key', key)
+        # print('bucket Name', bucket)
         
         try:
-            # time.sleep(2)
             # Start Textract asynchronous processing, use env vars
             response = textract.start_document_text_detection(
                 DocumentLocation={
@@ -31,7 +30,6 @@ def lambda_handler(event, context):
                     "SNSTopicArn": topic_arn,
                 },
             )
-            print('Entered Here after processing', response)
         except Exception as e:
             print(f"Error processing file {key} from bucket {bucket}: {str(e)}")
             

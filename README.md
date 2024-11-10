@@ -12,7 +12,7 @@ We are going to use two lambda functions, the first one will be triggered by fil
 
 ## Infrastructure
 The infrastructure of our project:
-![Infrastructure](images/pdf-processing.PNG)
+![Infrastructure](images/pdf-processng-architecture.png)
 
 ## The steps
 1. Upload: Users upload documents, such as PDFs or scanned images, to an Amazon S3 bucket in the incoming folder.
