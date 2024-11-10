@@ -15,12 +15,13 @@ def lambda_handler(event, context):
     file = base64.b64decode(event['body'])
     file_name = event['headers'].get('x-filename')
     # The directory to upload the file to
-    source_directory = "source/"
+    source_directory = "uploads/"
     
     s3_key = f"{source_directory}{file_name}"
     
     full_text = ""
     try:
+        # Quickly extracting one-page pdf files
         response = textract.detect_document_text(
         Document={'Bytes': file}
         )

@@ -41,7 +41,7 @@ resource "aws_s3_bucket_acl" "my-static-website" {
   ]
 
   bucket = aws_s3_bucket.my-static-website.id
-  acl    = "public-read"
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "my-static-website-policy" {
